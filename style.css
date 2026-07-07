@@ -17,7 +17,6 @@ body {
   width: 2px;
   height: 150px;
   background: white;
-  animation: webMove 8s linear infinite;
 }
 
 .spider {
@@ -26,7 +25,6 @@ body {
   left: -120px;
   width: 90px;
   height: 70px;
-  animation: walkAcross 8s linear infinite;
 }
 
 .body {
@@ -73,15 +71,6 @@ body {
 .r3 { right: -8px; top: 43px; transform: rotate(15deg); }
 .r4 { right: -5px; top: 53px; transform: rotate(35deg); }
 
-@keyframes walkAcross {
-  from { left: -120px; }
-  to { left: 110%; }
-}
-
-@keyframes webMove {
-  from { left: -80px; }
-  to { left: 110%; }
-}
 
 @keyframes legMove {
   from { transform: rotate(25deg); }
