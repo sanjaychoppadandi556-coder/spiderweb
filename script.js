@@ -1,79 +1,24 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+const spiderman = document.querySelector(".spiderman");
+const web = document.querySelector(".web");
 
-body {
-  height: 100vh;
-  background: #000;
-  overflow: hidden;
-}
+let direction = 1;
+let x = 0;
 
-.scene {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-}
+function moveAcrossScreen() {
+  x += direction * 1.2;
 
-.web {
-  position: absolute;
-  top: 0;
-  left: 140px;
-  width: 2px;
-  height: 260px;
-  background: white;
-  transform-origin: top center;
-  animation: webSwing 4s ease-in-out infinite;
-}
-
-.spiderman {
-  position: absolute;
-  width: 260px;
-  left: 30px;
-  top: 230px;
-  transform-origin: 130px -230px;
-  animation: swing 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.35));
-}
-
-@keyframes swing {
-  0% {
-    transform: rotate(-28deg) translateX(-40px);
+  if (x > window.innerWidth - 260) {
+    direction = -1;
   }
 
-  50% {
-    transform: rotate(28deg) translateX(90px);
+  if (x < 0) {
+    direction = 1;
   }
 
-  100% {
-    transform: rotate(-28deg) translateX(-40px);
-  }
+  spiderman.style.marginLeft = x + "px";
+  web.style.marginLeft = x + "px";
+
+  requestAnimationFrame(moveAcrossScreen);
 }
 
-@keyframes webSwing {
-  0% {
-    transform: rotate(-18deg);
-  }
-
-  50% {
-    transform: rotate(18deg);
-  }
-
-  100% {
-    transform: rotate(-18deg);
-  }
-}
-
-@media (max-width: 600px) {
-  .spiderman {
-    width: 190px;
-    left: 20px;
-    top: 220px;
-  }
-
-  .web {
-    left: 110px;
-    height: 240px;
-  }
-}
+moveAcrossScreen();
