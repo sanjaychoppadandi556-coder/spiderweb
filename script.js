@@ -1,20 +1,20 @@
-const hero = document.querySelector(".spider");
-const rope = document.querySelector(".web-line");
+const hero = document.getElementById("spiderman");
+const rope = document.getElementById("rope");
 
-let angle = -45;
-let speed = 1.2;
+let angle = -35;
 let direction = 1;
+const speed = 0.6;
 
-function animate() {
+function swing() {
   angle += speed * direction;
 
-  if (angle > 45) direction = -1;
-  if (angle < -45) direction = 1;
+  if (angle >= 35) direction = -1;
+  if (angle <= -35) direction = 1;
 
-  hero.style.transform = `rotate(${angle}deg)`;
   rope.style.transform = `rotate(${angle}deg)`;
+  hero.style.transform = `rotate(${angle}deg)`;
 
-  requestAnimationFrame(animate);
+  requestAnimationFrame(swing);
 }
 
-animate();
+swing();
