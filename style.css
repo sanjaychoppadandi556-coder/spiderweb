@@ -1,0 +1,75 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Consolas, monospace;
+}
+
+body {
+  height: 100vh;
+  background: #020409;
+  overflow: hidden;
+}
+
+#spiderCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.editor {
+  position: absolute;
+  left: 50%;
+  bottom: 35px;
+  transform: translateX(-50%);
+  width: 85%;
+  max-width: 900px;
+  height: 300px;
+  background: rgba(13, 17, 23, 0.95);
+  border: 1px solid rgba(88, 166, 255, 0.3);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(88, 166, 255, 0.25);
+}
+
+.editor-top {
+  height: 42px;
+  background: #161b22;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 15px;
+  color: #c9d1d9;
+}
+
+.editor-top span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.editor-top span:nth-child(1) { background: #ff5f56; }
+.editor-top span:nth-child(2) { background: #ffbd2e; }
+.editor-top span:nth-child(3) { background: #27c93f; }
+
+.editor-top p {
+  margin-left: 15px;
+}
+
+pre {
+  padding: 22px;
+  color: #c9d1d9;
+  font-size: 16px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.cursor {
+  color: #58a6ff;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
