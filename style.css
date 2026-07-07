@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Consolas, monospace;
 }
 
 body {
@@ -11,56 +10,80 @@ body {
   overflow: hidden;
 }
 
-#lightningCanvas {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background: #000;
-}
-
-.editor {
+.web-line {
   position: absolute;
-  left: 50%;
-  bottom: 45px;
-  transform: translateX(-50%);
-  width: 78%;
-  max-width: 900px;
-  height: 280px;
-  background: rgba(5, 5, 5, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 0 28px rgba(255, 255, 255, 0.18);
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 150px;
+  background: white;
+  animation: webMove 8s linear infinite;
 }
 
-.editor-header {
-  height: 42px;
-  background: rgba(15, 15, 15, 0.95);
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 0 16px;
-  color: white;
-  font-weight: bold;
+.spider {
+  position: absolute;
+  top: 145px;
+  left: -120px;
+  width: 90px;
+  height: 70px;
+  animation: walkAcross 8s linear infinite;
 }
 
-.editor-header p {
-  margin-left: 15px;
+.body {
+  position: absolute;
+  left: 28px;
+  top: 18px;
+  width: 45px;
+  height: 35px;
+  background: white;
+  border-radius: 50%;
 }
 
-pre {
-  padding: 25px;
-  color: white;
-  font-size: 17px;
-  line-height: 1.7;
-  white-space: pre-wrap;
+.head {
+  position: absolute;
+  left: 10px;
+  top: 25px;
+  width: 28px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
 }
 
-.cursor {
-  animation: blink 0.7s infinite;
+.leg {
+  position: absolute;
+  width: 45px;
+  height: 4px;
+  background: white;
+  border-radius: 10px;
+  transform-origin: right center;
+  animation: legMove 0.35s ease-in-out infinite alternate;
 }
 
-@keyframes blink {
-  50% { opacity: 0; }
+.l1 { left: -5px; top: 22px; transform: rotate(35deg); }
+.l2 { left: -8px; top: 32px; transform: rotate(15deg); }
+.l3 { left: -8px; top: 43px; transform: rotate(-15deg); }
+.l4 { left: -5px; top: 53px; transform: rotate(-35deg); }
+
+.r1, .r2, .r3, .r4 {
+  transform-origin: left center;
+}
+
+.r1 { right: -5px; top: 22px; transform: rotate(-35deg); }
+.r2 { right: -8px; top: 32px; transform: rotate(-15deg); }
+.r3 { right: -8px; top: 43px; transform: rotate(15deg); }
+.r4 { right: -5px; top: 53px; transform: rotate(35deg); }
+
+@keyframes walkAcross {
+  from { left: -120px; }
+  to { left: 110%; }
+}
+
+@keyframes webMove {
+  from { left: -80px; }
+  to { left: 110%; }
+}
+
+@keyframes legMove {
+  from { transform: rotate(25deg); }
+  to { transform: rotate(-25deg); }
 }
