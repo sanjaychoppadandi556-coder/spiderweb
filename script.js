@@ -1,24 +1,29 @@
-const spiderman = document.querySelector(".spiderman");
-const web = document.querySelector(".web");
+const hero = document.getElementById("spiderman");
+const rope = document.getElementById("rope");
 
+let angle = -45;
+let speed = 1.2;
 let direction = 1;
-let x = 0;
 
-function moveAcrossScreen() {
-  x += direction * 1.2;
+function animate(){
 
-  if (x > window.innerWidth - 260) {
-    direction = -1;
-  }
+    angle += speed * direction;
 
-  if (x < 0) {
-    direction = 1;
-  }
+    if(angle>45){
+        direction=-1;
+    }
 
-  spiderman.style.marginLeft = x + "px";
-  web.style.marginLeft = x + "px";
+    if(angle<-45){
+        direction=1;
+    }
 
-  requestAnimationFrame(moveAcrossScreen);
+    hero.style.transform =
+        `rotate(${angle}deg)`;
+
+    rope.style.transform =
+        `rotate(${angle}deg)`;
+
+    requestAnimationFrame(animate);
 }
 
-moveAcrossScreen();
+animate();
