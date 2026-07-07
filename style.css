@@ -45,16 +45,6 @@ body {
   font-weight: bold;
 }
 
-.editor-header span {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-}
-
-.editor-header span:nth-child(1) { background: #ff5f56; }
-.editor-header span:nth-child(2) { background: #ffbd2e; }
-.editor-header span:nth-child(3) { background: #27c93f; }
-
 .editor-header p {
   margin-left: 15px;
 }
