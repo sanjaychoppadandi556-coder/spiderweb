@@ -16,6 +16,7 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
+  background: #000;
 }
 
 .editor {
@@ -23,19 +24,19 @@ body {
   left: 50%;
   bottom: 45px;
   transform: translateX(-50%);
-  width: 80%;
+  width: 78%;
   max-width: 900px;
-  height: 290px;
-  background: rgba(8, 12, 18, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 18px;
+  height: 280px;
+  background: rgba(5, 5, 5, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 0 35px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.18);
 }
 
 .editor-header {
   height: 42px;
-  background: rgba(20, 25, 35, 0.95);
+  background: rgba(15, 15, 15, 0.95);
   display: flex;
   align-items: center;
   gap: 9px;
@@ -50,17 +51,9 @@ body {
   border-radius: 50%;
 }
 
-.editor-header span:nth-child(1) {
-  background: #ff5f56;
-}
-
-.editor-header span:nth-child(2) {
-  background: #ffbd2e;
-}
-
-.editor-header span:nth-child(3) {
-  background: #27c93f;
-}
+.editor-header span:nth-child(1) { background: #ff5f56; }
+.editor-header span:nth-child(2) { background: #ffbd2e; }
+.editor-header span:nth-child(3) { background: #27c93f; }
 
 .editor-header p {
   margin-left: 15px;
@@ -68,19 +61,16 @@ body {
 
 pre {
   padding: 25px;
-  color: #ffffff;
+  color: white;
   font-size: 17px;
   line-height: 1.7;
   white-space: pre-wrap;
 }
 
 .cursor {
-  color: white;
   animation: blink 0.7s infinite;
 }
 
 @keyframes blink {
-  50% {
-    opacity: 0;
-  }
+  50% { opacity: 0; }
 }
