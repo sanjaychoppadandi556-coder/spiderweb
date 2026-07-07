@@ -1,46 +1,47 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-    background:#000;
-    overflow:hidden;
-    height:100vh;
+body {
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
 }
 
-#scene{
-    position:relative;
-    width:100vw;
-    height:100vh;
+.scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
 }
 
-#rope{
-    position:absolute;
-    top:0;
-    left:50%;
-    width:3px;
-    height:260px;
-    background:white;
-    transform-origin:top center;
+/* Fixed rope */
+#rope {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 260px;
+  background: white;
+  transform-origin: top center;
+  z-index: 1;
 }
 
-#spiderman{
+/* Only Spider-Man moves */
+#spiderman {
+  position: fixed;
+  top: 260px;
+  left: calc(50% - 115px);
+  width: 230px;
+  transform-origin: 50% -260px;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+}
 
-    position:absolute;
-
-    width:230px;
-
-    top:220px;
-
-    left:calc(50% - 115px);
-
-    transform-origin:50% -220px;
-
-    pointer-events:none;
-
-    user-select:none;
-
-    filter:drop-shadow(0 0 20px rgba(255,255,255,.35));
+#spiderman img {
+  width: 100%;
+  display: block;
+  filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.35));
 }
