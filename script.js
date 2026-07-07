@@ -15,34 +15,50 @@ function random(min, max) {
 function createStars() {
   stars = [];
 
-  for (let i = 0; i < 130; i++) {
+  for (let i = 0; i < 120; i++) {
     stars.push({
       x: random(0, canvas.width),
       y: random(0, canvas.height),
-      size: random(1, 2.5),
-      alpha: random(0.2, 1),
-      speed: random(0.002, 0.01)
+      size: random(0.7, 1.8),
+      alpha: random(0.25, 1),
+      speed: random(0.002, 0.008)
     });
   }
 }
 
 function createLightning() {
-  const startX = random(0, canvas.width);
-  const startY = random(0, canvas.height * 0.45);
+  const startSide = Math.floor(random(0, 4));
+  let x, y;
+
+  if (startSide === 0) {
+    x = random(0, canvas.width);
+    y = 0;
+  } else if (startSide === 1) {
+    x = canvas.width;
+    y = random(0, canvas.height * 0.7);
+  } else if (startSide === 2) {
+    x = random(0, canvas.width);
+    y = canvas.height;
+  } else {
+    x = 0;
+    y = random(0, canvas.height * 0.7);
+  }
+
+  const targetX = canvas.width / 2 + random(-160, 160);
+  const targetY = canvas.height / 2 + random(-120, 80);
 
   let points = [];
-  let x = startX;
-  let y = startY;
-
   points.push({ x, y });
 
-  for (let i = 0; i < 18; i++) {
-    x += random(-80, 90);
-    y += random(25, 55);
+  const segments = 22;
 
-    points.push({ x, y });
+  for (let i = 1; i <= segments; i++) {
+    const t = i / segments;
 
-    if (x < 0 || x > canvas.width || y > canvas.height) break;
+    const px = x + (targetX - x) * t + random(-45, 45);
+    const py = y + (targetY - y) * t + random(-45, 45);
+
+    points.push({ x: px, y: py });
   }
 
   bolts.push({
@@ -55,16 +71,20 @@ function createLightning() {
 function createBranches(points) {
   let branches = [];
 
-  for (let i = 2; i < points.length - 2; i += 3) {
+  for (let i = 3; i < points.length - 3; i += 4) {
     let start = points[i];
     let branch = [{ x: start.x, y: start.y }];
+
+    let angle = random(0, Math.PI * 2);
+    let length = random(60, 140);
+    let steps = 6;
 
     let x = start.x;
     let y = start.y;
 
-    for (let j = 0; j < 6; j++) {
-      x += random(-70, 70);
-      y += random(-15, 45);
+    for (let j = 0; j < steps; j++) {
+      x += Math.cos(angle) * (length / steps) + random(-20, 20);
+      y += Math.sin(angle) * (length / steps) + random(-20, 20);
       branch.push({ x, y });
     }
 
@@ -89,45 +109,49 @@ function drawStars() {
   });
 }
 
-function drawBoltPath(points, life, width) {
+function drawBolt(points, life, width) {
+  ctx.save();
+
+  ctx.shadowBlur = 18;
+  ctx.shadowColor = "white";
+
   ctx.beginPath();
 
-  for (let i = 0; i < points.length; i++) {
-    let p = points[i];
+  points.forEach((p, i) => {
+    const jitterX = random(-3, 3);
+    const jitterY = random(-3, 3);
 
     if (i === 0) {
-      ctx.moveTo(p.x, p.y);
+      ctx.moveTo(p.x + jitterX, p.y + jitterY);
     } else {
-      ctx.lineTo(p.x + random(-4, 4), p.y + random(-4, 4));
+      ctx.lineTo(p.x + jitterX, p.y + jitterY);
     }
-  }
+  });
 
   ctx.strokeStyle = `rgba(255,255,255,${life})`;
   ctx.lineWidth = width;
-  ctx.shadowBlur = 22;
-  ctx.shadowColor = "white";
   ctx.stroke();
 
-  ctx.strokeStyle = `rgba(120,190,255,${life * 0.7})`;
-  ctx.lineWidth = width + 3;
-  ctx.shadowBlur = 35;
-  ctx.shadowColor = "#58a6ff";
+  ctx.strokeStyle = `rgba(255,255,255,${life * 0.35})`;
+  ctx.lineWidth = width + 5;
   ctx.stroke();
+
+  ctx.restore();
 }
 
 function drawLightning() {
-  if (Math.random() < 0.045) {
+  if (Math.random() < 0.065) {
     createLightning();
   }
 
   bolts.forEach((bolt, index) => {
-    drawBoltPath(bolt.points, bolt.life, 2);
+    drawBolt(bolt.points, bolt.life, 1.5);
 
     bolt.branches.forEach(branch => {
-      drawBoltPath(branch, bolt.life * 0.7, 1);
+      drawBolt(branch, bolt.life * 0.75, 1);
     });
 
-    bolt.life -= 0.025;
+    bolt.life -= 0.035;
 
     if (bolt.life <= 0) {
       bolts.splice(index, 1);
@@ -136,7 +160,7 @@ function drawLightning() {
 }
 
 function animate() {
-  ctx.fillStyle = "rgba(0,0,0,0.18)";
+  ctx.fillStyle = "rgba(0,0,0,0.35)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   drawStars();
