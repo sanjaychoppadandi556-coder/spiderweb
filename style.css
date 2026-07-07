@@ -7,11 +7,11 @@
 
 body {
   height: 100vh;
-  background: #020409;
+  background: #000;
   overflow: hidden;
 }
 
-#spiderCanvas {
+#lightningCanvas {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -21,55 +21,66 @@ body {
 .editor {
   position: absolute;
   left: 50%;
-  bottom: 35px;
+  bottom: 45px;
   transform: translateX(-50%);
-  width: 85%;
+  width: 80%;
   max-width: 900px;
-  height: 300px;
-  background: rgba(13, 17, 23, 0.95);
-  border: 1px solid rgba(88, 166, 255, 0.3);
-  border-radius: 14px;
+  height: 290px;
+  background: rgba(8, 12, 18, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 0 40px rgba(88, 166, 255, 0.25);
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.2);
 }
 
-.editor-top {
+.editor-header {
   height: 42px;
-  background: #161b22;
+  background: rgba(20, 25, 35, 0.95);
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 15px;
-  color: #c9d1d9;
+  gap: 9px;
+  padding: 0 16px;
+  color: white;
+  font-weight: bold;
 }
 
-.editor-top span {
-  width: 12px;
-  height: 12px;
+.editor-header span {
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
 }
 
-.editor-top span:nth-child(1) { background: #ff5f56; }
-.editor-top span:nth-child(2) { background: #ffbd2e; }
-.editor-top span:nth-child(3) { background: #27c93f; }
+.editor-header span:nth-child(1) {
+  background: #ff5f56;
+}
 
-.editor-top p {
+.editor-header span:nth-child(2) {
+  background: #ffbd2e;
+}
+
+.editor-header span:nth-child(3) {
+  background: #27c93f;
+}
+
+.editor-header p {
   margin-left: 15px;
 }
 
 pre {
-  padding: 22px;
-  color: #c9d1d9;
-  font-size: 16px;
+  padding: 25px;
+  color: #ffffff;
+  font-size: 17px;
   line-height: 1.7;
   white-space: pre-wrap;
 }
 
 .cursor {
-  color: #58a6ff;
+  color: white;
   animation: blink 0.7s infinite;
 }
 
 @keyframes blink {
-  50% { opacity: 0; }
+  50% {
+    opacity: 0;
+  }
 }
