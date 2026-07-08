@@ -1,20 +1,87 @@
-const hero = document.getElementById("spiderman");
-const rope = document.getElementById("rope");
+import * as THREE from "three";
 
-let angle = -35;
-let direction = 1;
-const speed = 0.6;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87ceeb);
 
-function swing() {
-  angle += speed * direction;
+const camera = new THREE.PerspectiveCamera(
+    60,
+    window.innerWidth/window.innerHeight,
+    0.1,
+    5000
+);
 
-  if (angle >= 35) direction = -1;
-  if (angle <= -35) direction = 1;
+camera.position.set(0,25,60);
 
-  rope.style.transform = `rotate(${angle}deg)`;
-  hero.style.transform = `rotate(${angle}deg)`;
+const renderer = new THREE.WebGLRenderer({
+    antialias:true
+});
 
-  requestAnimationFrame(swing);
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.shadowMap.enabled=true;
+
+document.body.appendChild(renderer.domElement);
+
+// Ambient Light
+const ambient=new THREE.AmbientLight(0xffffff,2);
+scene.add(ambient);
+
+// Sun Light
+const sun=new THREE.DirectionalLight(0xffffff,3);
+
+sun.position.set(80,150,60);
+
+sun.castShadow=true;
+
+scene.add(sun);
+
+// Ground
+const groundGeometry=new THREE.PlaneGeometry(1000,1000);
+
+const groundMaterial=new THREE.MeshStandardMaterial({
+    color:0x3cb043
+});
+
+const ground=new THREE.Mesh(
+    groundGeometry,
+    groundMaterial
+);
+
+ground.rotation.x=-Math.PI/2;
+
+ground.receiveShadow=true;
+
+scene.add(ground);
+
+// Grid
+const grid=new THREE.GridHelper(1000,100);
+
+scene.add(grid);
+
+// Animate
+function animate(){
+
+    requestAnimationFrame(animate);
+
+    renderer.render(scene,camera);
+
 }
 
-swing();
+animate();
+
+window.addEventListener("resize",()=>{
+
+camera.aspect=window.innerWidth/window.innerHeight;
+
+camera.updateProjectionMatrix();
+
+renderer.setSize(window.innerWidth,window.innerHeight);
+
+});
+
+// Hide loading
+setTimeout(()=>{
+
+document.getElementById("loading").style.display="none";
+
+},1000);
