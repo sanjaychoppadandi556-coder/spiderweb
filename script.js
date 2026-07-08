@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x8fd3ff);
@@ -20,7 +21,7 @@ controls.target.set(0, 45, 0);
 controls.enableDamping = true;
 controls.dampingFactor = 0.04;
 controls.maxDistance = 500;
-controls.minDistance = 50;
+controls.minDistance = 40;
 
 scene.add(new THREE.AmbientLight(0xffffff, 1.25));
 
@@ -64,15 +65,11 @@ function box(w, h, d, mat, x, y, z) {
 }
 
 function createRoad(width, length, x, z, rotate = false) {
-    const road = box(width, 0.12, length, roadMat, x, 0.05, z);
+    const sidewalk = box(width + 8, 0.18, length, sidewalkMat, x, 0.01, z);
+    if (rotate) sidewalk.rotation.y = Math.PI / 2;
+
+    const road = box(width, 0.12, length, roadMat, x, 0.09, z);
     if (rotate) road.rotation.y = Math.PI / 2;
-
-    const sidewalk1 = box(width + 8, 0.18, length, sidewalkMat, x, 0.01, z);
-    if (rotate) sidewalk1.rotation.y = Math.PI / 2;
-    sidewalk1.scale.set(1, 1, 1);
-    sidewalk1.position.y = 0.005;
-
-    road.position.y = 0.09;
 }
 
 for (let i = -600; i <= 600; i += 100) {
@@ -121,7 +118,6 @@ function createRooftop(building, width, depth, height) {
 function createBuilding(x, z, width, depth, height) {
     const mat = buildingMats[Math.floor(Math.random() * buildingMats.length)];
     const building = box(width, height, depth, mat, x, height / 2, z);
-
     createWindows(building, width, depth, height);
     createRooftop(building, width, depth, height);
 }
@@ -152,8 +148,9 @@ function createStreetLight(x, z) {
         emissiveIntensity: 1
     });
 
-    const pole = box(0.8, 12, 0.8, poleMat, x, 6, z);
-    const lamp = box(4, 0.6, 2, lampMat, x, 12.5, z);
+    box(0.8, 12, 0.8, poleMat, x, 6, z);
+    box(4, 0.6, 2, lampMat, x, 12.5, z);
+
     const light = new THREE.PointLight(0xffdd88, 0.8, 45);
     light.position.set(x, 13, z);
     scene.add(light);
@@ -170,7 +167,7 @@ function createTree(x, z) {
     const trunkMat = new THREE.MeshStandardMaterial({ color: 0x6b3f1d });
     const leafMat = new THREE.MeshStandardMaterial({ color: 0x176b2c });
 
-    const trunk = box(3, 10, 3, trunkMat, x, 5, z);
+    box(3, 10, 3, trunkMat, x, 5, z);
 
     const leaves = new THREE.Mesh(new THREE.SphereGeometry(8, 16, 16), leafMat);
     leaves.position.set(x, 14, z);
@@ -190,6 +187,7 @@ for (let i = 0; i < 120; i++) {
 
 function createCloud(x, y, z) {
     const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1 });
+
     for (let i = 0; i < 5; i++) {
         const cloud = new THREE.Mesh(new THREE.SphereGeometry(12 + Math.random() * 8, 16, 16), mat);
         cloud.position.set(x + i * 14, y + Math.random() * 5, z + Math.random() * 10);
@@ -201,8 +199,97 @@ for (let i = 0; i < 20; i++) {
     createCloud(-500 + Math.random() * 1000, 220 + Math.random() * 80, -500 + Math.random() * 1000);
 }
 
+/* Spider-Man Model */
+let spiderman = null;
+
+const loader = new GLTFLoader();
+
+loader.load(
+    "./models/spiderman.glb",
+    function (gltf) {
+        spiderman = gltf.scene;
+
+        spiderman.position.set(0, 2, 0);
+        spiderman.scale.set(8, 8, 8);
+
+        spiderman.traverse((child) => {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+
+        scene.add(spiderman);
+        console.log("Spider-Man model loaded successfully");
+    },
+    function (xhr) {
+        console.log("Loading Spider-Man: " + Math.round((xhr.loaded / xhr.total) * 100) + "%");
+    },
+    function (error) {
+        console.error("Spider-Man model not loaded. Check models/spiderman.glb path.", error);
+
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+        const blueMat = new THREE.MeshStandardMaterial({ color: 0x003cff });
+
+        const fallback = new THREE.Group();
+
+        const body = new THREE.Mesh(new THREE.BoxGeometry(5, 8, 3), bodyMat);
+        body.position.y = 8;
+
+        const head = new THREE.Mesh(new THREE.SphereGeometry(2.5, 24, 24), bodyMat);
+        head.position.y = 14;
+
+        const leg1 = new THREE.Mesh(new THREE.BoxGeometry(1.6, 6, 1.6), blueMat);
+        leg1.position.set(-1.2, 3, 0);
+
+        const leg2 = new THREE.Mesh(new THREE.BoxGeometry(1.6, 6, 1.6), blueMat);
+        leg2.position.set(1.2, 3, 0);
+
+        const arm1 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 6, 1.2), bodyMat);
+        arm1.position.set(-3.5, 8, 0);
+
+        const arm2 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 6, 1.2), bodyMat);
+        arm2.position.set(3.5, 8, 0);
+
+        fallback.add(body, head, leg1, leg2, arm1, arm2);
+        fallback.position.set(0, 0, 0);
+
+        spiderman = fallback;
+        scene.add(spiderman);
+    }
+);
+
+const keys = {};
+
+window.addEventListener("keydown", (e) => {
+    keys[e.key.toLowerCase()] = true;
+});
+
+window.addEventListener("keyup", (e) => {
+    keys[e.key.toLowerCase()] = false;
+});
+
+function moveSpiderMan() {
+    if (!spiderman) return;
+
+    const speed = 1.2;
+
+    if (keys["w"]) spiderman.position.z -= speed;
+    if (keys["s"]) spiderman.position.z += speed;
+    if (keys["a"]) spiderman.position.x -= speed;
+    if (keys["d"]) spiderman.position.x += speed;
+
+    controls.target.lerp(
+        new THREE.Vector3(spiderman.position.x, spiderman.position.y + 10, spiderman.position.z),
+        0.08
+    );
+}
+
 function animate() {
     requestAnimationFrame(animate);
+
+    moveSpiderMan();
+
     controls.update();
     renderer.render(scene, camera);
 }
