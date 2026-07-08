@@ -3,25 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spider-Man Swing</title>
+    <title>Spider-Man 3D</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three":"https://unpkg.com/three@0.166.1/build/three.module.js",
+        "three/addons/":"https://unpkg.com/three@0.166.1/examples/jsm/"
+      }
+    }
+    </script>
 </head>
+
 <body>
 
-    <div class="scene">
+<div id="loading">
+    Loading Spider-Man World...
+</div>
 
-        <!-- Rope -->
-        <div id="rope"></div>
-
-        <!-- Spider-Man -->
-        <div id="spiderman">
-            <img src="spiderman.png" alt="Spider-Man">
-        </div>
-
-    </div>
-
-    <script src="script.js"></script>
+<script type="module" src="script.js"></script>
 
 </body>
 </html>
