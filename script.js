@@ -224,8 +224,8 @@ loader.load(
 
         spiderman = gltf.scene;
 
-        spiderman.position.set(0, 2, 0);
-        spiderman.scale.set(40, 40, 40);
+        spiderman.position.set(0, 0.8, 0);
+        spiderman.scale.set(15, 15, 15);
         spiderman.rotation.y = Math.PI;
 
         spiderman.traverse((child) => {
