@@ -6,8 +6,13 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x8fd3ff);
 scene.fog = new THREE.Fog(0x8fd3ff, 180, 1000);
 
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 5000);
-camera.position.set(120, 90, 170);
+const camera = new THREE.PerspectiveCamera(
+    60,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    5000
+);
+camera.position.set(0, 25, 55);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -17,11 +22,11 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 45, 0);
 controls.enableDamping = true;
-controls.dampingFactor = 0.04;
-controls.maxDistance = 500;
-controls.minDistance = 40;
+controls.dampingFactor = 0.05;
+controls.enablePan = false;
+controls.minDistance = 15;
+controls.maxDistance = 120;
 
 scene.add(new THREE.AmbientLight(0xffffff, 1.25));
 
@@ -199,18 +204,29 @@ for (let i = 0; i < 20; i++) {
     createCloud(-500 + Math.random() * 1000, 220 + Math.random() * 80, -500 + Math.random() * 1000);
 }
 
-/* Spider-Man Model */
+/* Spider-Man */
 let spiderman = null;
+let mixer = null;
+let walkAction = null;
+let idleAction = null;
+
+const clock = new THREE.Clock();
+const cameraOffset = new THREE.Vector3(0, 18, 35);
+const cameraTarget = new THREE.Vector3();
 
 const loader = new GLTFLoader();
 
 loader.load(
     "./models/spiderman.glb",
+
     function (gltf) {
+        console.log("Spider-Man model loaded successfully");
+
         spiderman = gltf.scene;
 
         spiderman.position.set(0, 2, 0);
-        spiderman.scale.set(8, 8, 8);
+        spiderman.scale.set(40, 40, 40);
+        spiderman.rotation.y = Math.PI;
 
         spiderman.traverse((child) => {
             if (child.isMesh) {
@@ -220,42 +236,29 @@ loader.load(
         });
 
         scene.add(spiderman);
-        console.log("Spider-Man model loaded successfully");
+
+        mixer = new THREE.AnimationMixer(spiderman);
+
+        if (gltf.animations && gltf.animations.length > 0) {
+            console.log("Animations found:", gltf.animations.length);
+
+            idleAction = mixer.clipAction(gltf.animations[0]);
+            walkAction = mixer.clipAction(gltf.animations[0]);
+
+            idleAction.play();
+        } else {
+            console.log("No animations found in this GLB model");
+        }
     },
+
     function (xhr) {
-        console.log("Loading Spider-Man: " + Math.round((xhr.loaded / xhr.total) * 100) + "%");
+        if (xhr.total) {
+            console.log("Loading Spider-Man: " + Math.round((xhr.loaded / xhr.total) * 100) + "%");
+        }
     },
+
     function (error) {
-        console.error("Spider-Man model not loaded. Check models/spiderman.glb path.", error);
-
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-        const blueMat = new THREE.MeshStandardMaterial({ color: 0x003cff });
-
-        const fallback = new THREE.Group();
-
-        const body = new THREE.Mesh(new THREE.BoxGeometry(5, 8, 3), bodyMat);
-        body.position.y = 8;
-
-        const head = new THREE.Mesh(new THREE.SphereGeometry(2.5, 24, 24), bodyMat);
-        head.position.y = 14;
-
-        const leg1 = new THREE.Mesh(new THREE.BoxGeometry(1.6, 6, 1.6), blueMat);
-        leg1.position.set(-1.2, 3, 0);
-
-        const leg2 = new THREE.Mesh(new THREE.BoxGeometry(1.6, 6, 1.6), blueMat);
-        leg2.position.set(1.2, 3, 0);
-
-        const arm1 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 6, 1.2), bodyMat);
-        arm1.position.set(-3.5, 8, 0);
-
-        const arm2 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 6, 1.2), bodyMat);
-        arm2.position.set(3.5, 8, 0);
-
-        fallback.add(body, head, leg1, leg2, arm1, arm2);
-        fallback.position.set(0, 0, 0);
-
-        spiderman = fallback;
-        scene.add(spiderman);
+        console.error("Model failed to load:", error);
     }
 );
 
@@ -272,21 +275,66 @@ window.addEventListener("keyup", (e) => {
 function moveSpiderMan() {
     if (!spiderman) return;
 
-    const speed = 1.2;
+    const speed = keys["shift"] ? 2.2 : 1.2;
+    let moving = false;
 
-    if (keys["w"]) spiderman.position.z -= speed;
-    if (keys["s"]) spiderman.position.z += speed;
-    if (keys["a"]) spiderman.position.x -= speed;
-    if (keys["d"]) spiderman.position.x += speed;
+    if (keys["w"]) {
+        spiderman.position.z -= speed;
+        spiderman.rotation.y = Math.PI;
+        moving = true;
+    }
 
-    controls.target.lerp(
-        new THREE.Vector3(spiderman.position.x, spiderman.position.y + 10, spiderman.position.z),
-        0.08
+    if (keys["s"]) {
+        spiderman.position.z += speed;
+        spiderman.rotation.y = 0;
+        moving = true;
+    }
+
+    if (keys["a"]) {
+        spiderman.position.x -= speed;
+        spiderman.rotation.y = Math.PI / 2;
+        moving = true;
+    }
+
+    if (keys["d"]) {
+        spiderman.position.x += speed;
+        spiderman.rotation.y = -Math.PI / 2;
+        moving = true;
+    }
+
+    if (walkAction) {
+        if (moving) {
+            walkAction.paused = false;
+            walkAction.play();
+        } else {
+            walkAction.paused = true;
+        }
+    }
+
+    cameraTarget.set(
+        spiderman.position.x,
+        spiderman.position.y + 8,
+        spiderman.position.z
     );
+
+    const desiredCameraPosition = new THREE.Vector3(
+        spiderman.position.x + cameraOffset.x,
+        spiderman.position.y + cameraOffset.y,
+        spiderman.position.z + cameraOffset.z
+    );
+
+    camera.position.lerp(desiredCameraPosition, 0.08);
+    controls.target.lerp(cameraTarget, 0.08);
 }
 
 function animate() {
     requestAnimationFrame(animate);
+
+    const delta = clock.getDelta();
+
+    if (mixer) {
+        mixer.update(delta);
+    }
 
     moveSpiderMan();
 
