@@ -337,7 +337,7 @@ let spiderman = null;          // the loaded model (or fallback mesh)
 let mixer = null;              // THREE.AnimationMixer for playing clips
 let animationsMap = {};        // name -> THREE.AnimationAction
 let currentAction = null;      // action currently playing
-const MODEL_PATH = "./models/Avatar.glb";
+const MODEL_PATH = "./models/spiderman.glb";
 
 // Group that we actually move around the world.
 // The model gets nested inside so we can fix its scale/offset
@@ -410,7 +410,7 @@ gltfLoader.load(
     // (tweak SPIDERMAN_SCALE if your model looks too big/small)
     const SPIDERMAN_SCALE = 2.0;
     spiderman.scale.setScalar(SPIDERMAN_SCALE);
-    spiderman.position.set(0, 0, 0);   // sits at the feet of the rig
+    spiderman.position.set(0, 1, 0);   // sits at the feet of the rig
     spiderman.rotation.y = Math.PI;    // face away from camera (forward = -z)
 
     spiderman.traverse((child) => {
