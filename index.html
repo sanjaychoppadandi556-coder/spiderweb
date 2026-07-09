@@ -1,29 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spider-Man 3D</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spider-Man 3D City Game</title>
 
-    <link rel="stylesheet" href="style.css">
+  <!-- Our stylesheet -->
+  <link rel="stylesheet" href="style.css" />
 
-    <script type="importmap">
-    {
-      "imports": {
-        "three":"https://unpkg.com/three@0.166.1/build/three.module.js",
-        "three/addons/":"https://unpkg.com/three@0.166.1/examples/jsm/"
-      }
+  <!--
+    IMPORT MAP
+    This tells the browser where to find the "three" module and its
+    "addons" (OrbitControls, GLTFLoader, etc.) when we write
+    `import * as THREE from "three"` inside script.js.
+    We load everything from a public CDN (unpkg), so no build tools
+    (webpack/vite) and no backend are required. This works fine on
+    GitHub Pages because it's just static files.
+  -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
     }
-    </script>
+  }
+  </script>
 </head>
-
 <body>
 
-<div id="loading">
-    Loading Spider-Man World...
-</div>
+  <!-- ===================== LOADING SCREEN ===================== -->
+  <div id="loading-screen">
+    <div class="loading-content">
+      <h1>Loading Spider-Man World&hellip;</h1>
+      <div class="spinner"></div>
+      <p id="loading-progress">0%</p>
+    </div>
+  </div>
 
-<script type="module" src="script.js"></script>
+  <!-- ===================== GAME CONTAINER ===================== -->
+  <!-- Three.js will inject its <canvas> element into this div -->
+  <div id="game-container"></div>
 
+  <!-- ===================== ON-SCREEN HINT ===================== -->
+  <div id="controls-hint">
+    <strong>W A S D</strong> Move &nbsp;|&nbsp; <strong>Shift</strong> Run &nbsp;|&nbsp;
+    <strong>Mouse Drag</strong> Orbit Camera &nbsp;|&nbsp; <strong>Scroll</strong> Zoom
+  </div>
+
+  <!-- Our game code, loaded as an ES module so we can use `import` -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
