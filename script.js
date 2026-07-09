@@ -337,7 +337,7 @@ let spiderman = null;          // the loaded model (or fallback mesh)
 let mixer = null;              // THREE.AnimationMixer for playing clips
 let animationsMap = {};        // name -> THREE.AnimationAction
 let currentAction = null;      // action currently playing
-const MODEL_PATH = "./models/avatar.glb";
+const MODEL_PATH = "./models/Avatar.glb";
 
 // Group that we actually move around the world.
 // The model gets nested inside so we can fix its scale/offset
