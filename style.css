@@ -1,28 +1,119 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/* =========================================================
+   GLOBAL RESET
+   ========================================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-    overflow:hidden;
-    background:#000;
-    font-family:Arial,Helvetica,sans-serif;
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;               /* no scrollbars for a fullscreen game */
+  background: #000;
+  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-canvas{
-    display:block;
+/* =========================================================
+   GAME CONTAINER (holds the Three.js <canvas>)
+   ========================================================= */
+#game-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
-#loading{
-    position:absolute;
-    width:100%;
-    height:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:white;
-    background:black;
-    font-size:30px;
-    z-index:999;
+#game-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================================================
+   LOADING SCREEN
+   ========================================================= */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #1a0000 0%, #000000 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+/* Class added by JS once loading is complete -> fades the screen out */
+#loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-content {
+  text-align: center;
+  color: #fff;
+}
+
+.loading-content h1 {
+  font-size: 2rem;
+  color: #e62429;                 /* Spidey red */
+  text-shadow: 0 0 15px rgba(230, 36, 41, 0.8);
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+}
+
+/* Simple CSS spinner made from a rotating ring */
+.spinner {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px auto;
+  border: 6px solid rgba(255, 255, 255, 0.15);
+  border-top: 6px solid #e62429;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#loading-progress {
+  font-size: 1.1rem;
+  color: #cccccc;
+}
+
+/* =========================================================
+   ON-SCREEN CONTROLS HINT
+   ========================================================= */
+#controls-hint {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  z-index: 10;
+  pointer-events: none;             /* clicks pass through to the canvas */
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  #controls-hint {
+    font-size: 0.7rem;
+    padding: 6px 10px;
+    white-space: normal;
+    text-align: center;
+    width: 90%;
+  }
 }
