@@ -408,7 +408,7 @@ gltfLoader.load(
 
     // Correct scale / position / rotation
     // (tweak SPIDERMAN_SCALE if your model looks too big/small)
-    const SPIDERMAN_SCALE = 1.0;
+    const SPIDERMAN_SCALE = 2.0;
     spiderman.scale.setScalar(SPIDERMAN_SCALE);
     spiderman.position.set(0, 0, 0);   // sits at the feet of the rig
     spiderman.rotation.y = Math.PI;    // face away from camera (forward = -z)
